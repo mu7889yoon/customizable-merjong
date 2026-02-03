@@ -47,6 +47,57 @@ You can then import it in a browser:
 </script>
 ```
 
+## Custom Theme
+
+You can use custom SVG images for tiles by passing a theme configuration to the `render()` function.
+
+### Usage
+
+```javascript
+import { merjongAPI } from "merjong"
+
+// With custom tile designs
+const svg = merjongAPI.render('123m', {
+  baseUrl: 'https://example.com/tiles/',
+  tileDesigns: {
+    '1m': 'Man1-custom.svg',
+    '2m': 'Man2-custom.svg'
+  }
+})
+
+// Or load from a JSON file
+const config = await fetch('/theme.json').then(r => r.json())
+const svg = merjongAPI.render('123m', config)
+```
+
+### Config Format
+
+```json
+{
+  "baseUrl": "https://example.com/tiles/",
+  "tileDesigns": {
+    "base": "Front.svg",
+    "1m": "Man1.svg",
+    "2m": "Man2.svg"
+  }
+}
+```
+
+- `baseUrl` (optional): Prepended to relative paths in `tileDesigns`
+- `tileDesigns` (optional): Partial override of tile SVG URLs. Unspecified tiles fall back to the default theme.
+
+### Available Tile Keys
+
+| Key | Tile |
+|-----|------|
+| `base` | Tile background |
+| `x` | Back (face down) |
+| `q` | Question mark |
+| `0m`, `1m`-`9m` | Manzu (Characters) |
+| `0p`, `1p`-`9p` | Pinzu (Circles) |
+| `0s`, `1s`-`9s` | Souzu (Bamboo) |
+| `1z`-`7z` | Honor tiles (East, South, West, North, White, Green, Red) |
+
 ## Credits
 
 Mahjong tile images are from [FluffyStuff/riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles), released to the public domain under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/).  

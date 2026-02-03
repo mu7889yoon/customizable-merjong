@@ -1,5 +1,7 @@
 import { merjongAPI } from "./merjongAPI.js"
 
+export { merjongAPI }
+
 export interface RunOptions {
   querySelector?: string
   nodes?: ArrayLike<HTMLElement>
