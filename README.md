@@ -11,7 +11,6 @@ Merjong is a JavaScript-based image generation tool that uses MPSZ algebraic not
 
 - `packages/tile-generator`: SVG牌の生成器（`tile-config.json` と `output/` を管理）
 - `packages/merjong-js`: MPSZからSVGをレンダリングするライブラリ
-- `packages/manual`: HTMLマニュアル（`data/manual.json` と `theme.json` を使用）
 
 ## Example
 
@@ -71,8 +70,8 @@ const svg = merjongAPI.render('123m', {
   }
 })
 
-// Or load from a JSON file
-const config = await fetch('/theme.json').then(r => r.json())
+// Or load from your own JSON file
+const config = await fetch('/path/to/theme.json').then(r => r.json())
 const svg = merjongAPI.render('123m', config)
 ```
 
