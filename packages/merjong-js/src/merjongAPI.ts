@@ -1,5 +1,10 @@
 import themes from "./themes/index.js"
 
+type ThemeConfig = {
+  baseUrl?: string
+  tileDesigns?: Partial<Record<string, string>>
+}
+
 type TileOrientType =
   | "upright"       // upright tile
   | "sideways"      // sideways tile
@@ -129,24 +134,53 @@ type RenderConfig = {
   spaceWidth: number
 }
 
-const getRenderConfig = ():RenderConfig =>{
+const resolveBaseUrl = (
+  designs: Partial<Record<string, string>>,
+  baseUrl?: string
+): Partial<Record<string, string>> => {
+  if (!baseUrl) return designs
+
+  const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'
+  const resolved: Partial<Record<string, string>> = {}
+  for (const [key, value] of Object.entries(designs)) {
+    if (value && !value.startsWith('http://') && !value.startsWith('https://')) {
+      resolved[key] = normalizedBaseUrl + value
+    } else {
+      resolved[key] = value
+    }
+  }
+  return resolved
+}
+
+const getRenderConfig = (customConfig?: ThemeConfig): RenderConfig => {
   const theme = themes.default.getThemeVariables()
-  const tileWidth = theme.tileWidth
-  const tileHeight = theme.tileHeight
-  const tileGap = theme.tileGap
-  const spaceWidth = theme.spaceWidth
+
+  if (!customConfig) {
+    return {
+      tileDesigns: theme.tileDesigns,
+      tileWidth: theme.tileWidth,
+      tileHeight: theme.tileHeight,
+      tileGap: theme.tileGap,
+      spaceWidth: theme.spaceWidth,
+    }
+  }
+
+  const resolvedDesigns = resolveBaseUrl(
+    customConfig.tileDesigns || {},
+    customConfig.baseUrl
+  )
 
   return {
-    tileDesigns: theme.tileDesigns,
-    tileWidth,
-    tileHeight,
-    tileGap,
-    spaceWidth,
+    tileDesigns: { ...theme.tileDesigns, ...resolvedDesigns } as Record<string, string>,
+    tileWidth: theme.tileWidth,
+    tileHeight: theme.tileHeight,
+    tileGap: theme.tileGap,
+    spaceWidth: theme.spaceWidth,
   }
 }
 
-const render = (mpsz: string) => {
-  const config = getRenderConfig()
+const render = (mpsz: string, themeConfig?: ThemeConfig) => {
+  const config = getRenderConfig(themeConfig)
   const svgProfiles = genRenderProfiles(mpsz)
   return genSVG(svgProfiles, config)
 }

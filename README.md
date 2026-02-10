@@ -7,6 +7,11 @@
 
 Merjong is a JavaScript-based image generation tool that uses MPSZ algebraic notation to create images of mahjong tiles.
 
+## Workspace Layout
+
+- `packages/tile-generator`: SVG牌の生成器（`tile-config.json` と `output/` を管理）
+- `packages/merjong-js`: MPSZからSVGをレンダリングするライブラリ
+
 ## Example
 
 The following are some examples of Mahjong tile images rendered using Merjong.  
@@ -16,7 +21,7 @@ The following are some examples of Mahjong tile images rendered using Merjong.
 <div class="merjong">5'55m-55"5s-555'0''p-X55Xz</div>
 ```
 
-![img/merjong-sample.png](https://raw.githubusercontent.com/merjong-js/merjong/refs/heads/main/img/merjong-sample.png)
+![img/merjong-sample.png](https://raw.githubusercontent.com/mu7889yoon/customizable-merjong/refs/heads/main/img/merjong-sample.png)
 
 ## Merjong MPSZ Notation
 
@@ -46,6 +51,57 @@ You can then import it in a browser:
   import merjong from "https://cdn.jsdelivr.net/npm/merjong/+esm"
 </script>
 ```
+
+## Custom Theme
+
+You can use custom SVG images for tiles by passing a theme configuration to the `render()` function.
+
+### Usage
+
+```javascript
+import { merjongAPI } from "merjong"
+
+// With custom tile designs
+const svg = merjongAPI.render('123m', {
+  baseUrl: 'https://example.com/tiles/',
+  tileDesigns: {
+    '1m': 'Man1-custom.svg',
+    '2m': 'Man2-custom.svg'
+  }
+})
+
+// Or load from your own JSON file
+const config = await fetch('/path/to/theme.json').then(r => r.json())
+const svg = merjongAPI.render('123m', config)
+```
+
+### Config Format
+
+```json
+{
+  "baseUrl": "https://example.com/tiles/",
+  "tileDesigns": {
+    "base": "Front.svg",
+    "1m": "Man1.svg",
+    "2m": "Man2.svg"
+  }
+}
+```
+
+- `baseUrl` (optional): Prepended to relative paths in `tileDesigns`
+- `tileDesigns` (optional): Partial override of tile SVG URLs. Unspecified tiles fall back to the default theme.
+
+### Available Tile Keys
+
+| Key | Tile |
+|-----|------|
+| `base` | Tile background |
+| `x` | Back (face down) |
+| `q` | Question mark |
+| `0m`, `1m`-`9m` | Manzu (Characters) |
+| `0p`, `1p`-`9p` | Pinzu (Circles) |
+| `0s`, `1s`-`9s` | Souzu (Bamboo) |
+| `1z`-`7z` | Honor tiles (East, South, West, North, White, Green, Red) |
 
 ## Credits
 
