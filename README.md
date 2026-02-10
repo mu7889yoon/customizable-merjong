@@ -7,6 +7,12 @@
 
 Merjong is a JavaScript-based image generation tool that uses MPSZ algebraic notation to create images of mahjong tiles.
 
+## Workspace Layout
+
+- `packages/tile-generator`: SVG牌の生成器（`tile-config.json` と `output/` を管理）
+- `packages/merjong-js`: MPSZからSVGをレンダリングするライブラリ
+- `packages/manual`: HTMLマニュアル（`data/manual.json` と `theme.json` を使用）
+
 ## Example
 
 The following are some examples of Mahjong tile images rendered using Merjong.  
@@ -16,7 +22,7 @@ The following are some examples of Mahjong tile images rendered using Merjong.
 <div class="merjong">5'55m-55"5s-555'0''p-X55Xz</div>
 ```
 
-![img/merjong-sample.png](https://raw.githubusercontent.com/merjong-js/merjong/refs/heads/main/img/merjong-sample.png)
+![img/merjong-sample.png](https://raw.githubusercontent.com/mu7889yoon/customizable-merjong/refs/heads/main/img/merjong-sample.png)
 
 ## Merjong MPSZ Notation
 
